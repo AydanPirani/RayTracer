@@ -346,7 +346,6 @@ double sinfn(double x, double from, double to) {
 double cosfn(double x, double from, double to) {
   return (to - from) * cos(x * 6.28) + from;
 }
-
 void setFrame(const char* animateFile, Autonoma* MAIN_DATA, int frame, int frameLen) {
   if (animateFile) {
     char object_type[80];
@@ -390,17 +389,16 @@ void setFrame(const char* animateFile, Autonoma* MAIN_DATA, int frame, int frame
           exit(1);
         }
       } else if (streq(object_type, "object")) {
-        ShapeNode* node = MAIN_DATA->listStart;
-        for (int i = 0; i < obj_num; i++) {
-          if (node == MAIN_DATA->listEnd) {
-            printf("Could not find object number %d\n", obj_num);
-            exit(1);
+        Shape* shape = NULL;
+        for (int i = 0; i < MAIN_DATA->shapes.size(); i++) {
+          if (i == obj_num) {
+            shape = MAIN_DATA->shapes[i];
           }
-          if (i == obj_num)
-            break;
-          node = node->next;
         }
-        Shape* shape = node->data;
+        if (shape == NULL) {
+          printf("Could not find object number %d\n", obj_num);
+          exit(1);
+        }
 
         if (streq(field_type, "yaw")) {
           shape->setYaw(result);

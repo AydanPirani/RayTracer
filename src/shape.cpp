@@ -37,16 +37,14 @@ void Shape::setRoll(double c) {
 }
 
 void calcColor(unsigned char* toFill, Autonoma* c, const Ray& ray, unsigned int depth) {
-  ShapeNode* t = c->listStart;
   double curTime;
   Shape* curShape = NULL;
-  while (t != NULL) {
-    double time = t->data->getIntersection(ray);
+  for (int i = 0; i < c->shapes.size(); i++) {
+    double time = c->shapes[i]->getIntersection(ray);
     if (curShape == NULL || time < curTime) {
       curTime = time;
-      curShape = t->data;
+      curShape = c->shapes[i];
     }
-    t = t->next;
   }
 
   if (curTime == inf) {
