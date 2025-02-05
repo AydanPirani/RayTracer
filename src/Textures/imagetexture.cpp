@@ -1,5 +1,8 @@
 #include "imagetexture.h"
 
+#include <stdio.h>
+#include <string.h>
+
 ImageTexture::~ImageTexture() {
   delete imageData;
 }
@@ -208,14 +211,22 @@ void ImageTexture::readPPM(FILE* f, const char* file) {
       ne = fpeek(f);
     }
     imageData = (unsigned char*)malloc(4 * w * h * (sizeof(unsigned char)));
-    for (y = h - 1; y >= 0; y--)
-      for (x = 0; x < w; x++) {
-        int total = 4 * (x + y * w);
-        imageData[total] = getc(f);
-        imageData[total + 1] = getc(f);
-        imageData[total + 2] = getc(f);
-        imageData[total + 3] = 255;
+
+    unsigned char rowBuffer[3 * w];
+    for (y = 0; y < h; y++) {
+      unsigned char* dest = imageData + 4 * (h - 1 - y) * w;
+      if (fread(rowBuffer, 3, w, f) != w) {
+        printf("Failed to read!");
+        exit(0);
       }
+      unsigned char* src = rowBuffer;
+      for (x = 0; x < w; x++) {
+        *dest++ = *src++;
+        *dest++ = *src++;
+        *dest++ = *src++;
+        *dest++ = 255;
+      }
+    }
   } else if (id == '3') {
     int ne = fpeek(f);
     while (ne == ' ' || ne == '\n' || ne == '\t') {
