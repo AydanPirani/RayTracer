@@ -9,10 +9,10 @@
 
 class Light {
  public:
-  unsigned char* color;
+  double* color;
   unsigned char* getColor(unsigned char a, unsigned char b, unsigned char c);
   Vector center;
-  Light(const Vector& cente, unsigned char* colo);
+  Light(const Vector& cente, double* colo);
 
   ~Light();
 };

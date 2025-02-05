@@ -23,11 +23,11 @@ float tdiff(struct timeval* start, struct timeval* end) {
   return (end->tv_sec - start->tv_sec) + 1e-6 * (end->tv_usec - start->tv_usec);
 }
 
-unsigned char* getColor(unsigned char a, unsigned char b, unsigned char c) {
-  unsigned char* r = (unsigned char*)malloc(sizeof(unsigned char) * 3);
-  r[0] = a;
-  r[1] = b;
-  r[2] = c;
+double* getColor(unsigned char a, unsigned char b, unsigned char c) {
+  double* r = (double*)malloc(sizeof(double) * 3);
+  r[0] = ((double)a) / 255.0;
+  r[1] = ((double)b) / 255.0;
+  r[2] = ((double)c) / 255.0;
   return r;
 }
 
