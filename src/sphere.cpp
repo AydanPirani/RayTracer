@@ -33,17 +33,21 @@ bool Sphere::getLightIntersection(const Ray& ray, double* fill) {
   fill[2] *= temp[2] / 255.;
   return false;
 }
+
 double Sphere::getIntersection(const Ray& ray) {
+  // Ax^2 + bx + c
+  const Vector toRay = ray.point - center;
   const double A = ray.vector.mag2();
-  const double B = 2 * ray.vector.dot(ray.point - center);
-  const double C = (ray.point - center).mag2() - radius * radius;
-  const double descriminant = B * B - 4 * A * C;
-  if (descriminant < 0)
+  // const double B = 2*ray.vector.dot(toRay);
+  const double B_half = ray.vector.dot(toRay);
+  const double C = toRay.mag2() - radius * radius;
+  const double D_quart = B_half * B_half - A * C;
+  if (D_quart < 0)
     return inf;
   else {
-    const double desc = sqrt(descriminant);
-    const double root1 = (-B - desc) / (2 * A);
-    const double root2 = (-B + desc) / (2 * A);
+    const double sqrt_D_half = sqrt(D_quart);
+    const double root1 = (-B_half - sqrt_D_half) / A;
+    const double root2 = (-B_half + sqrt_D_half) / A;
     return (root1 > 0) ? (root1) : ((root2 > 0) ? root2 : inf);
   }
 }
