@@ -1,6 +1,6 @@
 #ifndef __SHAPE_H__
 #define __SHAPE_H__
-#include "light.h"
+#include "autonoma.h"
 
 class Shape {
  public:

@@ -17,21 +17,4 @@ class Light {
   ~Light();
 };
 
-class Shape;
-
-class Autonoma {
- public:
-  Camera camera;
-  Texture* skybox;
-  unsigned int depth;
-  std::vector<Shape*> shapes;
-  std::vector<Light*> lights;
-  Autonoma(const Camera& c);
-  Autonoma(const Camera& c, Texture* tex);
-  void addShape(Shape* s);
-  void addLight(Light* s);
-};
-
-void getLight(double* tColor, Autonoma* aut, const Vector& point, const Vector& norm, unsigned char r);
-
 #endif

@@ -7,6 +7,7 @@
 
 #include "src/Textures/colortexture.h"
 #include "src/Textures/imagetexture.h"
+#include "src/autonoma.h"
 #include "src/box.h"
 #include "src/disk.h"
 #include "src/light.h"

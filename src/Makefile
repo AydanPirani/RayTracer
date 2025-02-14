@@ -27,6 +27,9 @@ $(OBJ_DIR)camera.obj: $(SRC_DIR)camera.cpp $(SRC_DIR)camera.h $(OBJ_DIR)vector.o
 
 $(OBJ_DIR)light.obj: $(SRC_DIR)light.cpp $(SRC_DIR)light.h $(OBJ_DIR)camera.obj
 	$(FUNC) $(output)$(OBJ_DIR)light.obj $(copt) $(SRC_DIR)light.cpp $(FLAGS)
+	
+$(OBJ_DIR)autonoma.obj: $(SRC_DIR)autonoma.cpp $(SRC_DIR)autonoma.h $(OBJ_DIR)camera.obj $(OBJ_DIR)light.obj
+	$(FUNC) $(output)$(OBJ_DIR)autonoma.obj $(copt) $(SRC_DIR)autonoma.cpp $(FLAGS)
 
 $(OBJ_DIR)shape.obj: $(SRC_DIR)shape.cpp $(SRC_DIR)shape.h $(OBJ_DIR)light.obj
 	$(FUNC) $(output)$(OBJ_DIR)shape.obj $(copt) $(SRC_DIR)shape.cpp $(FLAGS)
