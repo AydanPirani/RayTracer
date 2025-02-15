@@ -10,30 +10,18 @@ void Shape::setAngles(double a, double b, double c) {
   yaw = a;
   pitch = b;
   roll = c;
-  xcos = cos(yaw);
-  xsin = sin(yaw);
-  ycos = cos(pitch);
-  ysin = sin(pitch);
-  zcos = cos(roll);
-  zsin = sin(roll);
 }
 
 void Shape::setYaw(double a) {
   yaw = a;
-  xcos = cos(yaw);
-  xsin = sin(yaw);
 }
 
 void Shape::setPitch(double b) {
   pitch = b;
-  ycos = cos(pitch);
-  ysin = sin(pitch);
 }
 
 void Shape::setRoll(double c) {
   roll = c;
-  zcos = cos(roll);
-  zsin = sin(roll);
 }
 
 void calcColor(unsigned char* toFill, Autonoma* c, const Ray& ray, unsigned int depth) {

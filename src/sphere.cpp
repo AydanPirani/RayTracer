@@ -88,33 +88,3 @@ Vector Sphere::getNormal(const Vector& point) {
   return ((norm[0] - 128) * right + (norm[1] - 128) * up + norm[2] * vect)
       .normalize();
 }
-
-void Sphere::setAngles(double a, double b, double c) {
-  yaw = a;
-  pitch = b;
-  roll = c;
-  xcos = cos(yaw);
-  xsin = sin(yaw);
-  ycos = cos(pitch);
-  ysin = sin(pitch);
-  zcos = cos(roll);
-  zsin = sin(roll);
-}
-
-void Sphere::setYaw(double a) {
-  yaw = a;
-  xcos = cos(yaw);
-  xsin = sin(yaw);
-}
-
-void Sphere::setPitch(double b) {
-  pitch = b;
-  ycos = cos(pitch);
-  ysin = sin(pitch);
-}
-
-void Sphere::setRoll(double c) {
-  roll = c;
-  zcos = cos(roll);
-  zsin = sin(roll);
-}

@@ -6,7 +6,7 @@
 class Plane : public Shape {
  public:
   Vector normal, right, up;
-  double d;
+  double d, xsin, xcos, ysin, ycos, zsin, zcos;
   Plane(const Vector& c, Texture* t, double ya, double pi, double ro, double tx, double ty);
   double getIntersection(const Ray& ray);
   bool getLightIntersection(const Ray& ray, double* toFill);

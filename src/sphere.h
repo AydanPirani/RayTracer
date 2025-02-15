@@ -11,9 +11,5 @@ class Sphere : public Shape {
   void getColor(unsigned char* toFill, double* am, double* op, double* ref, Autonoma* r, Ray ray, unsigned int depth);
   Vector getNormal(const Vector& point);
   unsigned char reversible();
-  void setAngles(double a, double b, double c);
-  void setYaw(double a);
-  void setPitch(double b);
-  void setRoll(double c);
 };
 #endif
