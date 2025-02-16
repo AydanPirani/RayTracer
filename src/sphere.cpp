@@ -88,3 +88,11 @@ Vector Sphere::getNormal(const Vector& point) {
   return ((norm[0] - 128) * right + (norm[1] - 128) * up + norm[2] * vect)
       .normalize();
 }
+
+const AABB Sphere::getAABB() {
+  AABB aabb;
+  Vector rad(radius, radius, radius);
+  aabb.expand(center + rad);
+  aabb.expand(center - rad);
+  return aabb;
+}

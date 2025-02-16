@@ -7,6 +7,7 @@ class Disk : public Plane {
   Disk(const Vector& c, Texture* t, double ya, double pi, double ro, double tx, double ty);
   double getIntersection(const Ray& ray);
   bool getLightIntersection(const Ray& ray, double* fill);
+  const AABB getAABB();
 };
 
 #endif

@@ -8,6 +8,10 @@ class Triangle : public Plane {
   Triangle(const Vector& c, const Vector& b, const Vector& a, Texture* t);
   double getIntersection(const Ray& ray);
   bool getLightIntersection(const Ray& ray, double* fill);
+  Vector centroid = Vector(0, 0, 0);
+
+  const AABB getAABB();
+  const Vector getCentroid();
 };
 
 #endif

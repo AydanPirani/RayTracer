@@ -122,3 +122,12 @@ Vector Plane::getNormal(const Vector& point) {
     return ret;
   }
 }
+
+const AABB Plane::getAABB() {
+  AABB aabb;
+  Vector p = -d * normal;
+  // use 0.001 for thickness
+  aabb.expand(p + right * INFINITY + up * INFINITY + normal * 0.001);
+  aabb.expand(p + right * -INFINITY + up * -INFINITY + normal * -0.001);
+  return aabb;
+}

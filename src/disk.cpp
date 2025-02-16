@@ -26,3 +26,11 @@ bool Disk::getLightIntersection(const Ray& ray, double* fill) {
   fill[2] *= temp[2] / 255.;
   return false;
 }
+
+const AABB Disk::getAABB() {
+  AABB aabb;
+  Vector p = center + normal;
+  aabb.expand(p + right * textureX + up * textureY + normal * 0.001);
+  aabb.expand(p - right * textureX - up * textureY + normal * -0.001);
+  return aabb;
+}

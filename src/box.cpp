@@ -11,7 +11,8 @@ double Box::getIntersection(const Ray& ray) {
   return time;
 }
 
-bool Box::getLightIntersection(const Ray& ray, double* fill) {
+__attribute__((access(read_only, 1))) bool Box::getLightIntersection(
+    const Ray& ray, double* fill) {
   const double t = ray.vector.dot(normal);
   const double norm = normal.dot(ray.point) + d;
   const double r = -norm / t;
@@ -29,4 +30,24 @@ bool Box::getLightIntersection(const Ray& ray, double* fill) {
   fill[1] *= temp[1] / 255.;
   fill[2] *= temp[2] / 255.;
   return false;
+}
+
+const AABB Box::getAABB() {
+  AABB aabb;
+
+  const Vector corners[4] = {
+      Vector(-textureX / 2, -textureY / 2, 0),  // bottom-left
+      Vector(textureX / 2, -textureY / 2, 0),   // bottom-right
+      Vector(-textureX / 2, textureY / 2, 0),   // top-left
+      Vector(textureX / 2, textureY / 2, 0)     // top-right
+  };
+
+  for (int i = 0; i < 4; i++) {
+    const Vector worldCorner = center + right * corners[i].x +
+                               up * corners[i].y + normal * corners[i].z;
+
+    aabb.expand(worldCorner);
+  }
+
+  return aabb;
 }

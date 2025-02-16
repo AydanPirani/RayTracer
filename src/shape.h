@@ -1,6 +1,7 @@
 #ifndef __SHAPE_H__
 #define __SHAPE_H__
 #include "autonoma.h"
+#include "bvh.h"
 
 class Shape {
  public:
@@ -21,8 +22,8 @@ class Shape {
   virtual void setRoll(double d);
 
   ~Shape();
+  virtual const AABB getAABB() = 0;
+  virtual const Vector getCentroid();
 };
-
-void calcColor(unsigned char* toFill, Autonoma*, const Ray& ray, unsigned int depth);
 
 #endif

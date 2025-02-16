@@ -44,6 +44,7 @@ Triangle::Triangle(const Vector& c, const Vector& b, const Vector& a, Texture* t
   thirdX = np.x;
 
   d = -normal.dot(center);
+  centroid = center + (right * (textureX + thirdX) + up * textureY) / 3.0;
 }
 
 double Triangle::getIntersection(const Ray& ray) {
@@ -74,4 +75,16 @@ bool Triangle::getLightIntersection(const Ray& ray, double* fill) {
   fill[1] *= temp[1] / 255.;
   fill[2] *= temp[2] / 255.;
   return false;
+}
+
+const AABB Triangle::getAABB() {
+  AABB aabb;
+  aabb.expand(center);                                   // c
+  aabb.expand(center + right * textureX);                // b
+  aabb.expand(center + right * thirdX + up * textureY);  // a
+  return aabb;
+}
+
+const Vector Triangle::getCentroid() {
+  return centroid;
 }

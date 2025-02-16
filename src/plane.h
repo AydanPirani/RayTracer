@@ -17,6 +17,8 @@ class Plane : public Shape {
   void setYaw(const double d);
   void setPitch(const double d);
   void setRoll(const double d);
+
+  const AABB getAABB();
 };
 
 #endif
