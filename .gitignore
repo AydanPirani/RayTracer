@@ -1,0 +1,5 @@
+*.obj
+ground-truths
+output
+main.exe
+profile.json.gz

@@ -8,7 +8,7 @@ FLAGS := -O0 -g -Werror
 CPP_FILES := $(wildcard *.cpp)
 OBJ_FILES := $(addprefix $(OBJ_DIR),$(notdir $(CPP_FILES:.cpp=.obj)))
 
-TEXTURE_CPP_FILES := $(wildcard Textures/*.cpp)m
+TEXTURE_CPP_FILES := $(wildcard Textures/*.cpp)
 TEXTURE_OBJ_FILES := $(addprefix $(OBJ_DIR)Textures/,$(notdir $(TEXTURE_CPP_FILES:.cpp=.obj)))
 
 all: $(SRC_DIR)texture $(OBJ_FILES)

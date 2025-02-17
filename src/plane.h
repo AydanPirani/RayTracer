@@ -3,14 +3,13 @@
 
 #include "shape.h"
 
-class Plane : public Shape{
-public:
-  Vector vect, right, up;
+class Plane : public Shape {
+ public:
+  Vector normal, right, up;
   double d;
-  Plane(const Vector &c, Texture* t, double ya, double pi, double ro, double tx, double ty);
+  Plane(const Vector& c, Texture* t, double ya, double pi, double ro, double tx, double ty);
   double getIntersection(Ray ray);
   bool getLightIntersection(Ray ray, double* toFill);
-  void move();
   void getColor(unsigned char* toFill, double* am, double* op, double* ref, Autonoma* r, Ray ray, unsigned int depth);
   Vector getNormal(Vector point);
   unsigned char reversible();
