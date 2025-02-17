@@ -1,7 +1,7 @@
 FUNC := g++
 copt := -c 
 output :=-o 
-FLAGS := -O3 -g -Werror
+FLAGS := -O3 -march=native -mtune=native -lm -Werror -ffast-math -fopenmp -Ofast
 OBJ_DIR :=./
 
 CPP_FILES := $(wildcard *.cpp)
