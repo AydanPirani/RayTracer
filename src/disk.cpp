@@ -1,7 +1,7 @@
 #include "disk.h"
 Disk::Disk(const Vector& c, Texture* t, double ya, double pi, double ro, double tx, double ty) : Plane(c, t, ya, pi, ro, tx, ty) {}
 
-double Disk::getIntersection(Ray ray) {
+double Disk::getIntersection(const Ray& ray) {
   double time = Plane::getIntersection(ray);
   if (time == inf)
     return time;
@@ -9,7 +9,7 @@ double Disk::getIntersection(Ray ray) {
   return (dist.x * dist.x / (textureX * textureX) + dist.y * dist.y / (textureY * textureY) > 1) ? inf : time;
 }
 
-bool Disk::getLightIntersection(Ray ray, double* fill) {
+bool Disk::getLightIntersection(const Ray& ray, double* fill) {
   const double t = ray.vector.dot(normal);
   const double norm = normal.dot(ray.point) + d;
   const double r = -norm / t;

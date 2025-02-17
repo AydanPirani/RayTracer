@@ -8,15 +8,15 @@ class Plane : public Shape {
   Vector normal, right, up;
   double d;
   Plane(const Vector& c, Texture* t, double ya, double pi, double ro, double tx, double ty);
-  double getIntersection(Ray ray);
-  bool getLightIntersection(Ray ray, double* toFill);
+  double getIntersection(const Ray& ray);
+  bool getLightIntersection(const Ray& ray, double* toFill);
   void getColor(unsigned char* toFill, double* am, double* op, double* ref, Autonoma* r, Ray ray, unsigned int depth);
-  Vector getNormal(Vector point);
+  Vector getNormal(const Vector& point);
   unsigned char reversible();
-  void setAngles(double yaw, double pitch, double roll);
-  void setYaw(double d);
-  void setPitch(double d);
-  void setRoll(double d);
+  void setAngles(const double yaw, const double pitch, const double roll);
+  void setYaw(const double d);
+  void setPitch(const double d);
+  void setRoll(const double d);
 };
 
 #endif

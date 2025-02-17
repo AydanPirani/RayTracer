@@ -1,16 +1,16 @@
+#include "vector.h"
+
 #include <math.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include <limits>
-// #include <printf.h>
-#include <stddef.h>
 
-#include "vector.h"
+Vector::Vector(double a, double b, double c) : x(a), y(b), z(c) {}
 
-Vector::Vector(double a, double b, double c) : x(a), y(b), z(c) {
-}
+// Vector Operators
 void Vector::operator-=(const Vector rhs) {
   x -= rhs.x;
   y -= rhs.y;
@@ -52,57 +52,19 @@ void Vector::operator/=(const int rhs) {
   z /= rhs;
 }
 
-Vector Vector::operator-(const Vector rhs) {
-  return Vector(x - rhs.x, y - rhs.y, z - rhs.z);
-}
-Vector Vector::operator+(const Vector rhs) {
-  return Vector(x + rhs.x, y + rhs.y, z + rhs.z);
-}
-/*
-Vector Vector::operator * (const Vector a) {
-   return Vector(y*a.z-z*a.y, z*a.x-x*a.z, x*a.y-y*a.x);
-}*/
-Vector Vector::operator*(const double rhs) {
-  return Vector(x * rhs, y * rhs, z * rhs);
-}
-Vector Vector::operator*(const float rhs) {
-  return Vector(x * rhs, y * rhs, z * rhs);
-}
-Vector Vector::operator*(const int rhs) {
-  return Vector(x * rhs, y * rhs, z * rhs);
-}
-Vector Vector::operator/(const double rhs) {
-  return Vector(x / rhs, y / rhs, z / rhs);
-}
-Vector Vector::operator/(const float rhs) {
-  return Vector(x / rhs, y / rhs, z / rhs);
-}
-Vector Vector::operator/(const int rhs) {
-  return Vector(x / rhs, y / rhs, z / rhs);
-}
-Vector Vector::cross(const Vector a) {
-  return Vector(y * a.z - z * a.y, z * a.x - x * a.z, x * a.y - y * a.x);
-}
-double Vector::mag2() {
-  return x * x + y * y + z * z;
-}
-double Vector::mag() {
-  return sqrt(x * x + y * y + z * z);
-}
-double Vector::dot(const Vector a) {
-  return x * a.x + y * a.y + z * a.z;
-}
-Vector Vector::normalize() {
-  double m = mag();
-  return Vector(x / m, y / m, z / m);
-}
+// Vector operations
+__attribute__((access(read_only, 1), access(read_only, 2), access(read_only, 3), access(read_only, 4)))
+Vector
+solveScalers(const Vector& v1, const Vector& v2, const Vector& v3, const Vector& C) {
+  const Vector v1_v2 = v1.cross(v2);
+  const Vector v2_v3 = v2.cross(v3);
+  const Vector v3_v1 = v3.cross(v1);
+  const double denom = v1.dot(v2_v3);
 
-Vector solveScalers(Vector v1, Vector v2, Vector v3, Vector C) {
-  double denom = v1.z * v2.y * v3.x - v1.y * v2.z * v3.x - v1.z * v2.x * v3.y + v1.x * v2.z * v3.y + v1.y * v2.x * v3.z - v1.x * v2.y * v3.z;
-  double a = C.z * v2.y * v3.x - C.y * v2.z * v3.x - C.z * v2.x * v3.y + C.x * v2.z * v3.y + C.y * v2.x * v3.z - C.x * v2.y * v3.z;
-  double b = -C.z * v1.y * v3.x + C.y * v1.z * v3.x + C.z * v1.x * v3.y - C.x * v1.z * v3.y - C.y * v1.x * v3.z + C.x * v1.y * v3.z;
-  double c = C.z * v1.y * v2.x - C.y * v1.z * v2.x - C.z * v1.x * v2.y + C.x * v1.z * v2.y + C.y * v1.x * v2.z - C.x * v1.y * v2.z;
-  return Vector(a / denom, b / denom, c / denom);
+  const double a = C.dot(v2_v3) / denom;
+  const double b = C.dot(v3_v1) / denom;
+  const double c = C.dot(v1_v2) / denom;
+  return Vector(a, b, c);
 }
 
 Ray::Ray(const Vector& po, const Vector& ve) : point(po), vector(ve) {}

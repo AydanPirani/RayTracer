@@ -53,7 +53,7 @@ void insertionSort(TimeAndShape* arr, int n) {
   }
 }
 
-void calcColor(unsigned char* toFill, Autonoma* c, Ray ray, unsigned int depth) {
+void calcColor(unsigned char* toFill, Autonoma* c, const Ray& ray, unsigned int depth) {
   ShapeNode* t = c->listStart;
   TimeAndShape* times = (TimeAndShape*)malloc(0);
   size_t seen = 0;
@@ -75,7 +75,7 @@ void calcColor(unsigned char* toFill, Autonoma* c, Ray ray, unsigned int depth) 
     Vector temp = ray.vector.normalize();
     const double x = temp.x;
     const double z = temp.z;
-    const double me = (temp.y < 0) ? -temp.y : temp.y;
+    const double me = abs(temp.y);
     const double angle = atan2(z, x);
     c->skybox->getColor(toFill, &ambient, &opacity, &reflection, fix(angle / M_TWO_PI), fix(me));
     return;
@@ -97,7 +97,7 @@ void calcColor(unsigned char* toFill, Autonoma* c, Ray ray, unsigned int depth) 
   if (depth < c->depth && (opacity < 1 - 1e-6 || reflection > 1e-6)) {
     unsigned char col[4];
     if (opacity < 1 - 1e-6) {
-      Ray nextRay = Ray(intersect + ray.vector * 1E-4, ray.vector);
+      const Ray nextRay = Ray(intersect + ray.vector * 1E-4, ray.vector);
       calcColor(col, c, nextRay, depth + 1);
       toFill[0] = (unsigned char)(toFill[0] * opacity + col[0] * (1 - opacity));
       toFill[1] = (unsigned char)(toFill[1] * opacity + col[1] * (1 - opacity));
@@ -106,7 +106,7 @@ void calcColor(unsigned char* toFill, Autonoma* c, Ray ray, unsigned int depth) 
     if (reflection > 1e-6) {
       Vector norm = curShape->getNormal(intersect).normalize();
       Vector vec = ray.vector - 2 * norm * (norm.dot(ray.vector));
-      Ray nextRay = Ray(intersect + vec * 1E-4, vec);
+      const Ray nextRay = Ray(intersect + vec * 1E-4, vec);
       calcColor(col, c, nextRay, depth + 1);
 
       toFill[0] = (unsigned char)(toFill[0] * (1 - reflection) + col[0] * (reflection));

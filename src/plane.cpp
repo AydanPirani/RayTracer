@@ -9,7 +9,7 @@ Plane::Plane(const Vector& c, Texture* t, double ya, double pi, double ro, doubl
   mapY = textureY;
 }
 
-void Plane::setAngles(double a, double b, double c) {
+void Plane::setAngles(const double a, const double b, const double c) {
   yaw = a;
   pitch = b;
   roll = c;
@@ -31,7 +31,7 @@ void Plane::setAngles(double a, double b, double c) {
   d = -normal.dot(center);
 }
 
-void Plane::setYaw(double a) {
+void Plane::setYaw(const double a) {
   yaw = a;
   xcos = cos(yaw);
   xsin = sin(yaw);
@@ -48,7 +48,7 @@ void Plane::setYaw(double a) {
   d = -normal.dot(center);
 }
 
-void Plane::setPitch(double b) {
+void Plane::setPitch(const double b) {
   pitch = b;
   ycos = cos(pitch);
   ysin = sin(pitch);
@@ -61,7 +61,7 @@ void Plane::setPitch(double b) {
   d = -normal.dot(center);
 }
 
-void Plane::setRoll(double c) {
+void Plane::setRoll(const double c) {
   roll = c;
   zcos = cos(roll);
   zsin = sin(roll);
@@ -77,14 +77,14 @@ void Plane::setRoll(double c) {
   d = -normal.dot(center);
 }
 
-double Plane::getIntersection(Ray ray) {
+double Plane::getIntersection(const Ray& ray) {
   const double t = ray.vector.dot(normal);
   const double norm = normal.dot(ray.point) + d;
   const double r = -norm / t;
   return (r > 0) ? r : inf;
 }
 
-bool Plane::getLightIntersection(Ray ray, double* fill) {
+bool Plane::getLightIntersection(const Ray& ray, double* fill) {
   const double t = ray.vector.dot(normal);
   const double norm = normal.dot(ray.point) + d;
   const double r = -norm / t;
@@ -110,7 +110,7 @@ unsigned char Plane::reversible() {
   return 1;
 }
 
-Vector Plane::getNormal(Vector point) {
+Vector Plane::getNormal(const Vector& point) {
   if (normalMap == NULL)
     return normal;
   else {

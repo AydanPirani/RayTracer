@@ -41,6 +41,6 @@ class Autonoma {
   void removeLight(LightNode* s);
 };
 
-void getLight(double* toFill, Autonoma* aut, Vector point, Vector norm, unsigned char r);
+void getLight(double* tColor, Autonoma* aut, const Vector& point, const Vector& norm, unsigned char r);
 
 #endif
