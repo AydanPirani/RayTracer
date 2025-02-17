@@ -6,14 +6,20 @@
 #include "shape.h"
 
 BVH::BVH(const std::vector<Shape*>& shapes) {
-  std::vector<int> indices(shapes.size());
-  std::iota(indices.begin(), indices.end(), 0);
+  std::vector<int> indices;
+  for (int i = 0; i < shapes.size(); i++) {
+    if (shapes[i]->useBVH()) {
+      indices.push_back(i);
+    } else {
+      notBvh.push_back(shapes[i]);
+    }
+  }
 
 #pragma omp parallel num_threads(4)
   {
 #pragma omp single
     {
-      rootNode = createBVH(0, shapes.size(), indices, shapes);
+      rootNode = createBVH(0, indices.size(), indices, shapes);
     }
   }
 }
@@ -73,24 +79,35 @@ Axis BVHNode::getLargestAxis() const {
 }
 
 BVHNode* BVH::getNextNode(int size) {
-  // if (nodePool == nullptr) {
-  //     nodePool = (BVHNode*) malloc((2 * size - 1) * sizeof(BVHNode));
-  // }
-
-  // return nodePool+(nextFreeNodeIdx++);
-
-  BVHNode* node = new BVHNode();
-
-  // TODO: ensure safe creation
-  // node->_shapes.clear();
-  return node;
+  return new BVHNode();
 }
 
 double BVH::getIntersection(const Ray& ray, Shape*& outHit) const {
-  return rootNode->getIntersection(ray, outHit);
+  double notBvhRv = inf;
+  Shape* maybeOut = nullptr;
+  for (auto shape : notBvh) {
+    const double hitTime = shape->getIntersection(ray);
+    if (hitTime < notBvhRv) {
+      maybeOut = shape;
+      notBvhRv = hitTime;
+    }
+  }
+  double rv = rootNode->getIntersection(ray, outHit);
+  if (notBvhRv < rv) {
+    rv = notBvhRv;
+    outHit = maybeOut;
+  }
+
+  return rv;
 }
 
 bool BVH::getLightIntersection(const Ray& ray, double* fill) const {
+  bool rv = false;
+  for (auto shape : notBvh) {
+    rv = shape->getLightIntersection(ray, fill);
+    if (rv) return true;
+  }
+
   return rootNode->getLightIntersection(ray, fill);
 }
 
@@ -112,10 +129,6 @@ bool AABB::intersects(const Ray& ray) const {
 }
 
 double BVHNode::getIntersection(const Ray& ray, Shape*& outHit) const {
-  if (!aabb.intersects(ray)) {
-    return inf;
-  }
-
   double rv = inf;
   if (leftChild == nullptr && rightChild == nullptr) {
     for (auto shape : _shapes) {
@@ -127,6 +140,10 @@ double BVHNode::getIntersection(const Ray& ray, Shape*& outHit) const {
     }
 
     return rv;
+  }
+
+  if (!aabb.intersects(ray)) {
+    return inf;
   }
 
   Shape* leftOut = nullptr;
@@ -144,9 +161,6 @@ double BVHNode::getIntersection(const Ray& ray, Shape*& outHit) const {
 }
 
 bool BVHNode::getLightIntersection(const Ray& ray, double* fill) const {
-  if (!aabb.intersects(ray)) {
-    return false;
-  }
   bool rv = false;
   if (leftChild == nullptr && rightChild == nullptr) {
     for (auto shape : _shapes) {
@@ -154,6 +168,10 @@ bool BVHNode::getLightIntersection(const Ray& ray, double* fill) const {
       if (rv) return true;
     }
     return rv;
+  }
+
+  if (!aabb.intersects(ray)) {
+    return false;
   }
   // Check on left
   if (leftChild == nullptr) {

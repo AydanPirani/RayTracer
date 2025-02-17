@@ -13,5 +13,6 @@ class Sphere : public Shape {
   unsigned char reversible();
 
   const AABB getAABB();
+  const bool useBVH() { return true; }
 };
 #endif

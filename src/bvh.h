@@ -33,16 +33,22 @@ struct BVHNode {
   Axis getLargestAxis() const;
   double getIntersection(const Ray& ray, Shape*& outHit) const;
   bool getLightIntersection(const Ray& ray, double* fill) const;
+  ~BVHNode() {
+    delete leftChild;
+    delete rightChild;
+  }
 };
 
 class BVH {
-  BVHNode* nodePool = nullptr;
+  std::vector<Shape*> notBvh;
   BVHNode* getNextNode(int size);
-  void sortIndicesByCentroid(int leftIdx, int rightIdx, std::vector<int>& indices, const std::vector<Shape*>& shapes, Axis axis);
   BVHNode* createBVH(int leftIdx, int rightIdx, std::vector<int>& indices, const std::vector<Shape*>& shapes);
 
  public:
   BVH(const std::vector<Shape*>& shapes);
+  ~BVH() {
+    delete rootNode;
+  }
   BVHNode* rootNode;
   double getIntersection(const Ray& ray, Shape*& outHit) const;
   bool getLightIntersection(const Ray& ray, double* fill) const;

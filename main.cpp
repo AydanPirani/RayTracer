@@ -99,7 +99,7 @@ int streq(const char* a, const char* b) {
     retval;                                                \
   })
 
-Texture* parseTexture(FILE* f, bool allowNull) {
+Texture* parseTexture(FILE* f, bool allowNull, std::vector<Texture*>& textures) {
   char texture_type[80];
 
   if (lscanf(f, "%s", texture_type) == EOF) {
@@ -119,7 +119,9 @@ Texture* parseTexture(FILE* f, bool allowNull) {
       printf("Could not read <r> <g> <b> <opacity> <reflection> <ambient>\n");
       exit(1);
     }
-    return new ColorTexture((unsigned char)r, (unsigned char)g, (unsigned char)b, opacity, reflection, ambient);
+    Texture* tex = new ColorTexture((unsigned char)r, (unsigned char)g, (unsigned char)b, opacity, reflection, ambient);
+    textures.push_back(tex);
+    return tex;
   }
   if (streq(texture_type, "image")) {
     char image_file[100];
@@ -127,7 +129,9 @@ Texture* parseTexture(FILE* f, bool allowNull) {
       printf("Could not read <image path>\n");
       exit(1);
     }
-    return new ImageTexture(image_file);
+    Texture* tex = new ImageTexture(image_file);
+    textures.push_back(tex);
+    return tex;
   }
   if (streq(texture_type, "maskedimage")) {
     char image_file[100];
@@ -137,6 +141,7 @@ Texture* parseTexture(FILE* f, bool allowNull) {
     }
     ImageTexture* text = new ImageTexture(image_file);
     text->maskImageAlpha();
+    textures.push_back(text);
     return text;
   }
   if (streq(texture_type, "inlineimage")) {
@@ -161,6 +166,7 @@ Texture* parseTexture(FILE* f, bool allowNull) {
     text->opacity = opacity;
     text->reflection = reflection;
     text->ambient = ambient;
+    textures.push_back(text);
     return text;
   }
 
@@ -194,7 +200,7 @@ unsigned int* getTriangles(FILE* f, int len) {
   return vec;
 }
 
-Autonoma* createInputs(const char* inputFile) {
+Autonoma* createInputs(const char* inputFile, std::vector<Texture*>& textures) {
   double camera_x = 0;
   double camera_y = 2;
   double camera_z = 0;
@@ -214,7 +220,7 @@ Autonoma* createInputs(const char* inputFile) {
       printf("Could not read <camera_x> <camera_y> <camera_z> <yaw> <pitch> <roll>\n");
       exit(1);
     }
-    background = parseTexture(f, false);
+    background = parseTexture(f, false, textures);
   }
   if (!background) {
     const char* texture_path = "images/skybox.jpg";
@@ -242,10 +248,10 @@ Autonoma* createInputs(const char* inputFile) {
           printf("Could not read <plane_x> <plane_y> <plane_z> <yaw> <pitch> <roll> <tx> <ty>\n");
           exit(1);
         }
-        Texture* texture = parseTexture(f, false);
+        Texture* texture = parseTexture(f, false, textures);
         Plane* shape = new Plane(Vector(plane_x, plane_y, plane_z), texture, yaw, pitch, roll, tx, ty);
         MAIN_DATA->addShape(shape);
-        shape->normalMap = parseTexture(f, true);
+        shape->normalMap = parseTexture(f, true, textures);
       } else if (streq(object_type, "disk")) {
         double disk_x, disk_y, disk_z;
         double yaw, pitch, roll;
@@ -254,10 +260,10 @@ Autonoma* createInputs(const char* inputFile) {
           printf("Could not read <disk_x> <disk_y> <disk_z> <yaw> <pitch> <roll> <tx> <ty>\n");
           exit(1);
         }
-        Texture* texture = parseTexture(f, false);
+        Texture* texture = parseTexture(f, false, textures);
         Disk* shape = new Disk(Vector(disk_x, disk_y, disk_z), texture, yaw, pitch, roll, tx, ty);
         MAIN_DATA->addShape(shape);
-        shape->normalMap = parseTexture(f, true);
+        shape->normalMap = parseTexture(f, true, textures);
       } else if (streq(object_type, "box")) {
         double box_x, box_y, box_z;
         double yaw, pitch, roll;
@@ -266,10 +272,10 @@ Autonoma* createInputs(const char* inputFile) {
           printf("Could not read <box_x> <box_y> <box_z> <yaw> <pitch> <roll> <tx> <ty>\n");
           exit(1);
         }
-        Texture* texture = parseTexture(f, false);
+        Texture* texture = parseTexture(f, false, textures);
         Box* shape = new Box(Vector(box_x, box_y, box_z), texture, yaw, pitch, roll, tx, ty);
         MAIN_DATA->addShape(shape);
-        shape->normalMap = parseTexture(f, true);
+        shape->normalMap = parseTexture(f, true, textures);
       } else if (streq(object_type, "triangle")) {
         double x1, y1, z1;
         double x2, y2, z2;
@@ -278,10 +284,10 @@ Autonoma* createInputs(const char* inputFile) {
           printf("Could not read <x1> <y1> <z1> <x2> <y2> <z2> <x3> <y3> <z3>\n");
           exit(1);
         }
-        Texture* texture = parseTexture(f, false);
+        Texture* texture = parseTexture(f, false, textures);
         Triangle* shape = new Triangle(Vector(x1, y1, z1), Vector(x2, y2, z2), Vector(x3, y3, z3), texture);
         MAIN_DATA->addShape(shape);
-        shape->normalMap = parseTexture(f, true);
+        shape->normalMap = parseTexture(f, true, textures);
       } else if (streq(object_type, "sphere")) {
         double sphere_x, sphere_y, sphere_z;
         double yaw, pitch, roll;
@@ -290,10 +296,10 @@ Autonoma* createInputs(const char* inputFile) {
           printf("Could not read <sphere_x> <sphere_y> <sphere_z> <yaw> <pitch> <roll> <radius>\n");
           exit(1);
         }
-        Texture* texture = parseTexture(f, false);
+        Texture* texture = parseTexture(f, false, textures);
         Sphere* shape = new Sphere(Vector(sphere_x, sphere_y, sphere_z), texture, yaw, pitch, roll, radius);
         MAIN_DATA->addShape(shape);
-        shape->normalMap = parseTexture(f, true);
+        shape->normalMap = parseTexture(f, true, textures);
       } else if (streq(object_type, "mesh")) {
         char point_filepath[100];
         char poly_filepath[100];
@@ -306,8 +312,8 @@ Autonoma* createInputs(const char* inputFile) {
           printf("Could not read <point filepath> <num_points> <polygons filepath> <num_polygons> <off_x> <off_y> <off_z>\n");
           exit(1);
         }
-        Texture* texture = parseTexture(f, false);
-        Texture* normalMap = parseTexture(f, true);
+        Texture* texture = parseTexture(f, false, textures);
+        Texture* normalMap = parseTexture(f, true, textures);
 
         FILE *vectors = fopen(point_filepath, "r"), *triangles = fopen(poly_filepath, "r");
         if (!vectors) {
@@ -533,7 +539,8 @@ int main(int argc, const char** argv) {
     }
   }
 
-  Autonoma* MAIN_DATA = createInputs(inFile);
+  std::vector<Texture*> textures;
+  Autonoma* MAIN_DATA = createInputs(inFile, textures);
   BVH bvh(MAIN_DATA->shapes);
 
   int frame;
@@ -559,6 +566,13 @@ int main(int argc, const char** argv) {
     }
     printf("Done Frame %7d|\n", frame);
   }
+
+  delete MAIN_DATA;
+  
+  for (auto& i : textures) {
+    delete i;
+  }
+  textures.clear();
 
   gettimeofday(&end, NULL);
   printf("Total time to create images=%0.6f seconds\n", tdiff(&start, &end));

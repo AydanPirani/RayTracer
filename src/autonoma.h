@@ -3,18 +3,12 @@
 #include <vector>
 
 #include "Textures/colortexture.h"
+#include "Textures/texture.h"
+#include "camera.h"
 #include "light.h"
-
-struct LightNode {
-  Light *data;
-  LightNode *prev, *next;
-};
+#include "vector.h"
 
 class Shape;
-struct ShapeNode {
-  Shape *data;
-  ShapeNode *prev, *next;
-};
 
 class Autonoma {
  public:
@@ -27,6 +21,8 @@ class Autonoma {
   Autonoma(const Camera &c, Texture *tex);
   void addShape(Shape *s);
   void addLight(Light *s);
+
+  ~Autonoma();
 };
 
 #endif

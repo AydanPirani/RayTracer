@@ -4,7 +4,7 @@
 #include <string.h>
 
 ImageTexture::~ImageTexture() {
-  delete imageData;
+  free(imageData);
 }
 
 void ImageTexture::getColor(unsigned char* toFill, double* am, double* op, double* ref, double x, double y) {

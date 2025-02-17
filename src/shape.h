@@ -24,6 +24,7 @@ class Shape {
   ~Shape();
   virtual const AABB getAABB() = 0;
   virtual const Vector getCentroid();
+  virtual const bool useBVH() { return false; }
 };
 
 #endif

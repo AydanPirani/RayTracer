@@ -12,6 +12,7 @@ class Triangle : public Plane {
 
   const AABB getAABB();
   const Vector getCentroid();
+  const bool useBVH() { return true; }
 };
 
 #endif
