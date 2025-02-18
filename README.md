@@ -1,3 +1,27 @@
+# FOR REVIEWERS
+
+Before running the code, please run the following commands after cloning the code (from the project directory):
+```bash
+chmod +x ./setup.sh
+sudo sh setup.sh
+```
+
+To run a benchmark, checkout the relevant git commit and run: 
+```bash
+hyperfine "<COMMAND>"
+```
+Note that you must replace `<COMMAND>` with the new command. Please ensure that the quotations around the command remain, as they are a hyperfine requirement.
+
+
+*Benchmarks (and relevant commit hashes)*: 
+- **BVH:** ff1ad7f269f201dfccbb2b276b9001fcd063b5e7
+- **Fixes (memory, etc):** 617fa46524ac78c08d3059667583a61535194d19
+- **Parallelizing:** f8ba8c87415fa348a6113a683a4e32a5c9d96a75
+- **Perf Changes:** 33cc279f1d11f073186cf3f3c80f44c8b289d286
+- **GCC Flags:** a4274540217006042436aa3d55b8dff49ee0c5a5
+- **Initial Refactor:** 847110f1a527479779f9de92e42235d9f6ace3bd
+-----
+
 # 598APE-HW1
 
 This repository contains code for homework 1 of 598APE.
